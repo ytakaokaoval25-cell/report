@@ -24,7 +24,7 @@ from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
-OUTPUT_PATH = "/Users/takaoka/report/report_final.docx"
+OUTPUT_PATH = "/home/user/report/report_final.docx"
 
 # ============================================================
 # 実測データ（CSV より）
@@ -724,9 +724,10 @@ def build():
     h1(doc,'1.7　考察')
     # Toughness calc
     import numpy as _np
-    _U_SS = _np.trapz([p[1] for p in SS400_ENG], [p[0] for p in SS400_ENG])
-    _U_A7 = _np.trapz([p[1] for p in A7075_ENG], [p[0] for p in A7075_ENG])
-    _U_FC = _np.trapz([p[1] for p in FC250_ENG], [p[0] for p in FC250_ENG])
+    _trapz = getattr(_np, 'trapezoid', None) or _np.trapz
+    _U_SS = _trapz([p[1] for p in SS400_ENG], [p[0] for p in SS400_ENG])
+    _U_A7 = _trapz([p[1] for p in A7075_ENG], [p[0] for p in A7075_ENG])
+    _U_FC = _trapz([p[1] for p in FC250_ENG], [p[0] for p in FC250_ENG])
     B(f'破断伸び delta の序列は SS400（{KV["SS400"]["delta"]:.2f}%）>> '
       f'A7075（{KV["A7075"]["delta"]:.2f}%）> FC250（{KV["FC250"]["delta"]:.2f}%）であり，'
       'SS400 と FC250 の間には約 6 倍の差が存在する．')
